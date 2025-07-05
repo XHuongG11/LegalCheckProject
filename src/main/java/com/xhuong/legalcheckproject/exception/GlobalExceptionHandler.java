@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(ResourceNotFound.class)
-    public ResponseEntity<ApiResponse> handleResourceNotFound(){
-        return ResponseEntity.ok(new ApiResponse(1000, "Resource not found.", null));
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleResourceNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.ok(new ApiResponse(1000, ex.getMessage(), null));
     }
 }

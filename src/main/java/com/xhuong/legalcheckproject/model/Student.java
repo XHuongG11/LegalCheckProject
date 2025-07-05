@@ -1,9 +1,7 @@
 package com.xhuong.legalcheckproject.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -13,9 +11,9 @@ import java.util.List;
 
 @Document(collection = "students")
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Student {
     @Id
     private String id;
@@ -40,9 +38,10 @@ public class Student {
     @Field("updated_at")
     private LocalDateTime updatedAt;
 
-    @Data
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
+    @SuperBuilder
     public static class StudentInfo {
         @Field("full_name")
         private String fullName;
@@ -56,8 +55,11 @@ public class Student {
 
     @AllArgsConstructor
     @NoArgsConstructor
+    @Data
+    @SuperBuilder
+    @EqualsAndHashCode(callSuper = true)
     public static class StudentInfoHistory extends StudentInfo {
-        @Field("update_at")
+        @Field("updated_at")
         private LocalDateTime updatedAt;
     }
 }

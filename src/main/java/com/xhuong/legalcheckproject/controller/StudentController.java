@@ -1,14 +1,13 @@
 package com.xhuong.legalcheckproject.controller;
 
+import com.xhuong.legalcheckproject.dto.request.StudentInfoRequest;
 import com.xhuong.legalcheckproject.dto.response.ApiResponse;
+import com.xhuong.legalcheckproject.dto.response.StudentInfoResponse;
 import com.xhuong.legalcheckproject.model.Student;
-import com.xhuong.legalcheckproject.service.StudentService;
+import com.xhuong.legalcheckproject.service.student.IStudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
 public class StudentController {
-    private final StudentService studentService;
+    private final IStudentService studentService;
 
     @GetMapping()
     public ResponseEntity<ApiResponse> getAllStudent() {
@@ -25,8 +24,27 @@ public class StudentController {
     }
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<ApiResponse> getStudentById(@PathVariable("studentId") String studentId) {
-        Student student = studentService.getStudentById(studentId);
-        return ResponseEntity.ok(new ApiResponse(200, "success", student));
+    public ResponseEntity<ApiResponse> getStudentInfoById(@PathVariable("studentId") String studentId) {
+        Student student = studentService.getStudentInfoById(studentId);
+        StudentInfoResponse response = studentService.covertToResponse(student);
+        return ResponseEntity.ok(new ApiResponse(200, "success", response));
+    }
+
+    @PostMapping()
+    public ResponseEntity<ApiResponse> createStudent(@RequestBody StudentInfoRequest request) {
+        StudentInfoResponse response = studentService.covertToResponse(studentService.createStudent(request));
+        return ResponseEntity.ok(new ApiResponse(200, "success", response));
+    }
+
+    @PutMapping("/{studentId}")
+    public ResponseEntity<ApiResponse> updateStudent(@PathVariable String studentId, @RequestBody StudentInfoRequest request) {
+        StudentInfoResponse response = studentService.covertToResponse(studentService.updateStudentInfo(studentId, request));
+        return ResponseEntity.ok(new ApiResponse(200, "success", response));
+    }
+
+    @DeleteMapping("/{studentId}")
+    public ResponseEntity<ApiResponse> deleteStudent(@PathVariable String studentId) {
+        studentService.deleteStudent(studentId);
+        return ResponseEntity.ok(new ApiResponse(200, "success", null));
     }
 }
